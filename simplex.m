@@ -16,7 +16,7 @@ function[A, subs, x, z] = simplex(type, c, A, b);
 % x - optimal solution
 % z - value of the objective function at x.
 %
-% See also linprog
+% See http://en.wikipedia.org/wiki/Simplex_algorithm
 
 if any(b < 0)
    error(' Right hand sides of the constraint set must be nonnegative.')
@@ -36,14 +36,10 @@ d = [c zeros(1,m+1)];
 A = [A;d];
 
    disp(sprintf('     ________________________________________________'))
-   disp(sprintf('\n              Tableaux of the Simplex Algorithm'))
-   disp(sprintf('     ________________________________________________'))
-   disp(sprintf('\n                  Initial tableau\n'))
    A
-   disp(sprintf(' Press any key to continue ...\n\n'))
-   pause
+   disp(sprintf('     ________________________________________________'))
 
-[mi, col] = Br(A(m+1,1:m+n));
+[mi, col] = BlandsRule(A(m+1,1:m+n));
 subs = n+1:m+n;
 while (~isempty(mi) & mi < 0 & abs(mi) > eps)
    t = A(1:m,col);
@@ -57,7 +53,7 @@ while (~isempty(mi) & mi < 0 & abs(mi) > eps)
       end
       return;
    end
-   row = MRT(A(1:m,m+n+1),A(1:m,col));
+   row = MinimumRatio(A(1:m,m+n+1),A(1:m,col));
    if ~isempty(row)
       A(row,:)= A(row,:)/A(row,col);
       subs(row) = col;
@@ -67,14 +63,45 @@ while (~isempty(mi) & mi < 0 & abs(mi) > eps)
          end
       end
    end
-   [mi, col] = Br(A(m+1,1:m+n));
+   [mi, col] = BlandsRule(A(m+1,1:m+n));
+   disp(sprintf('     ________________________________________________'))
+   A
+   disp(sprintf('     ________________________________________________'))
 end
 z = tp*A(m+1,m+n+1);
 x = zeros(1,m+n);
 x(subs) = A(1:m,m+n+1);
 x = x(1:n)';
 
-   disp(sprintf('\n\n                  Final tableau'))
-   A
-   disp(sprintf(' Press any key to continue ...\n'))
-   pause
+function [row, mi] = MinimumRatio(a, b)
+
+% The Minimum Ratio Test (MinimumRatio) performed on vectors a and b.
+% Output parameters:
+% row - index of the pivot row
+% mi - value of the smallest ratio.
+
+m = length(a);
+c = 1:m;
+a = a(:);
+b = b(:);
+l = c(b > 0);
+[mi, row] = min(a(l)./b(l));
+row = l(row);
+
+function [m, j] = BlandsRule(d)
+
+% Implementation of the Bland's rule applied to the array d.
+% Output parameters:
+% m - first negative number in the array d
+% j - index of the entry m.
+% See http://en.wikipedia.org/wiki/Bland%27s_rule
+
+
+ind = find(d < 0);
+if ~isempty(ind)
+   j = ind(1);
+   m = d(j);
+else
+   m = [];
+   j = [];
+end
