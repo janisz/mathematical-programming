@@ -1,4 +1,4 @@
-mathematical-programming
+Mathematical Programming
 ========================
 
-Matlab/Octave sripst for Linear Programming class
+Matlab/Octave scripts for Linear Programming class
