@@ -5,7 +5,7 @@ A = [3,-1,2,4,5;
     ]
 b = [7;12;7]
 lb = [-10;-5;-30;-8;-20]
-[x1, fval] = linprog(-f', A, b, [], [], zeros(5,1), [])
-[x2, exitflag] = simpleks(-f', A, b, zeros(5,1))
+[x1, fval] = linprog(-f', A, b, [], [], lb, [])
+[x2, exitflag] = simpleks(-f', A, b, lb)
 
 assert(x2, x1)

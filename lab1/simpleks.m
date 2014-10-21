@@ -1,20 +1,20 @@
 
-function[A, base, x, z] = sympleks(c, A, b)
-
-c = -c;
+function[x, exitflag] = simpleks(f, A, b, lb)
 
 [m, n] = size(A);
-A = [A eye(m)];
-b = b(:);
-c = c(:)';
+[o, p] = size(lb);
+A = [A -A];
+b = [b; -lb];
+f = f(:)';
+A = [A;[-eye(n) eye(n)]];
+[v, q] = size(A);
+A = [A eye(m+o)];
 A = [A b];
-d = [c zeros(1,m+1)];
+d = [f -f zeros(1,m+o+1)];
 A = [A;d];
 
-   disp(sprintf('     ________________________________________________'))
-   A
-   disp(sprintf('     ________________________________________________'))
-
+m = v;
+n = q;
 [mi, col] = min(A(m+1,1:m+n));
 base = n+1:m+n
 while (~isempty(mi) & mi < 0 & abs(mi) > eps)
@@ -30,15 +30,12 @@ while (~isempty(mi) & mi < 0 & abs(mi) > eps)
       end
    end
    [mi, col] = min(A(m+1,1:m+n));
-   disp(sprintf('     ________________________________________________'))
-   A
-   base
-   disp(sprintf('     ________________________________________________'))
 end
-z = A(m+1,m+n+1);
+
 x = zeros(1,m+n);
 x(base) = A(1:m,m+n+1);
 x = x(1:n)';
+x = x(1:length(x)/2) - x(length(x)/2+1:end)
 
 function [row, mi] = MinimumRatio(a, b)
 m = length(a);
