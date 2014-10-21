@@ -24,8 +24,7 @@ end
 base
 A
 while (~isempty(mi) & mi < 0 & abs(mi) > eps)
-   t = A(1:m,col);
-   if all(t <= 0)
+   if all(A(1:m,col) <= 0)
       x = zeros(n,1)
       exitflag = 0;
       return;
@@ -53,8 +52,6 @@ x = x(1:length(x)/2) - x(length(x)/2+1:end)
 exitflag = 1
 
 function row = MinimumRatio(a, b)
-m = length(a);
-c = 1:m;
-l = c(b > 0);
-[mi, row] = min(a(l)./b(l));
-row = l(row);
+  l = [1:length(a)](b > 0);
+  [mi, row] = min(a(l)./b(l));
+  row = l(row);
