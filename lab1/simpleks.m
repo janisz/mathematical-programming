@@ -1,20 +1,15 @@
 
 function[x, exitflag] = simpleks(f, A, b, lb)
 
-[m, n] = size(A);
-[o, p] = size(lb);
-A = [A -A];
+[m, n] = size(A)
 b = [b; -lb];
-f = f(:)';
-A = [A;[-eye(n) eye(n)]];
-[v, q] = size(A);
-A = [A eye(m+o)];
-A = [A b];
-d = [f -f zeros(1,m+o+1)];
-A = [A;d];
+A = [[[[[     A        -A                      ];
+        [   -eye(n)   eye(n)]]   eye(m+n) ]  b ];
+        [     f'       -f'     zeros(1,m+n+1)  ];
+];
 
-m = v;
-n = q;
+m = m+n;
+n = 2*n;
 [mi, col] = min(A(m+1,1:m+n));
 base = n+1:m+n
 while (~isempty(mi) & mi < 0 & abs(mi) > eps)
