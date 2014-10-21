@@ -1,6 +1,11 @@
 
 function[x, exitflag] = simpleks(f, A, b, lb)
 
+% Funkcja zwraca
+%          x - rozwiązanie
+%   exitflag - info o rozwiązaniu (1 - gdy RO istnieje; 0 - wpp)
+
+
 [m, n] = size(A)
 b = [b; -lb];
 A = [[[[[     A        -A                      ];
@@ -16,7 +21,8 @@ base = n+1:m+n
 if any(b < 0)
    exitflag = 0
 end
-
+base
+A
 while (~isempty(mi) & mi < 0 & abs(mi) > eps)
    t = A(1:m,col);
    if all(t <= 0)
@@ -35,6 +41,9 @@ while (~isempty(mi) & mi < 0 & abs(mi) > eps)
       end
    end
    [mi, col] = min(A(m+1,1:m+n));
+   disp('_____________________________________________________________________')
+   base
+   A
 end
 
 x = zeros(1,m+n);
