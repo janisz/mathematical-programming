@@ -2,3 +2,5 @@
 assert([a1 ,a2, a3], [-1, 0, 1])
 [a1, a2, a3] = przedzial_niepewnosci(@(x) cos(x), -0.01, 6.29)
 assert([a1 ,a2, a3], [-0.01, 3.135, 6.28])
+[a1, a2, a3] = przedzial_niepewnosci(@(x) (x^3+x^2), -0.5, 175)
+assert([a1 ,a2, a3], [-0.5, 0.183594, 174.5])
