@@ -25,4 +25,7 @@ end
 
 
 function [spelnia] = warunek3P(F, a1, a2, a3)
+
+assert (a1 != a2)
+assert (a3 != a2)
 spelnia = (a1 < a2 && a2 < a3 && F(a1) > F(a2) && F(a3) > F(a2))
